@@ -1,4 +1,6 @@
 import "./styles.css";
+// import PropTypes from "prop-types";
+import { useState } from "react";
 
 export default function App() {
   return (
@@ -35,15 +37,42 @@ export default function App() {
 }
 
 function TextExpander({
+  // set default values for props
   children,
-  collapsedNumWords,
-  expandButtonText,
-  buttonColor,
-  collapseButtonText,
+  collapsedNumWords = 10,
+  expandButtonText = "Show more",
+  buttonColor = "#1f09cd",
+  collapseButtonText = "Show less",
+  expanded = false,
+  className,
 }) {
+  const [isExpanded, setIsExpanded] = useState(expanded);
+
+  // show full string or collapse when pressed
+  const displayText = isExpanded
+    ? children
+    : children.split(" ").slice(0, collapsedNumWords).join(" ") + "...";
+
+  const buttonStyle = {
+    background: "none",
+    border: "none",
+    font: "inherit",
+    cursor: "pointer",
+    marginLeft: "6px",
+    color: buttonColor,
+  };
+
+  function handleClick() {
+    // toggle the state to make it either true or false when button is clicked
+    setIsExpanded((exp) => !exp);
+  }
+
   return (
-    <div>
-      <p>{children}</p>
+    <div className={className}>
+      <span>{displayText}</span>
+      <button onClick={handleClick} style={buttonStyle}>
+        {isExpanded ? collapseButtonText : expandButtonText}
+      </button>
     </div>
   );
 }
